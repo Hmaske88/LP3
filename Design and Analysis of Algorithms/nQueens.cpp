@@ -3,6 +3,15 @@
 
 using namespace std;
 
+void printSolution(const vector<vector<int>>& board) {
+    for (int i = 0; i < board.size(); i++) {
+        for (int j = 0; j < board[i].size(); j++) {
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
 bool isSafe(vector<vector<int>>& board, int row, int col, int n) {
     // Check the left side of the current column
     for (int i = 0; i < col; i++) {
@@ -30,31 +39,29 @@ bool isSafe(vector<vector<int>>& board, int row, int col, int n) {
 
 bool solveNQueens(vector<vector<int>>& board, int col, int n) {
     if (col >= n) {
-        return true; // All Queens are placed successfully.
+        // A solution is found, print it
+        printSolution(board);
+        cout << "-------------------" << endl;
+        return true;
     }
+
+    bool foundSolution = false;
 
     for (int i = 0; i < n; i++) {
         if (isSafe(board, i, col, n)) {
             board[i][col] = 1; // Place the Queen
 
-            if (solveNQueens(board, col + 1, n)) {
-                return true; // Recur to place the remaining Queens
+            // foundSolution = solveNQueens(board, col + 1, n) || foundSolution;
+            if(solveNQueens(board, col + 1, n)==true)
+            {
+                foundSolution=true;
             }
 
-            board[i][col] = 0; // Backtrack if no solution is found
+            board[i][col] = 0; // Backtrack
         }
     }
 
-    return false; // No solution found in this column
-}
-
-void printSolution(vector<vector<int>>& board) {
-    for (int i = 0; i < board.size(); i++) {
-        for (int j = 0; j < board[i].size(); j++) {
-            cout << board[i][j] << " ";
-        }
-        cout << endl;
-    }
+    return foundSolution;
 }
 
 int main() {
@@ -65,8 +72,7 @@ int main() {
     vector<vector<int>> board(n, vector<int>(n, 0));
 
     if (solveNQueens(board, 0, n)) {
-        cout << "N-Queens solution for n = " << n << ":" << endl;
-        printSolution(board);
+        cout << "All solutions for n = " << n << " have been printed." << endl;
     } else {
         cout << "No solution exists for n = " << n << "." << endl;
     }
